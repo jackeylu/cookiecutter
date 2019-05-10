@@ -10,6 +10,7 @@ import collections
 import click
 
 from cookiecutter import __version__
+from cookiecutter.config import get_user_config
 from cookiecutter.log import configure_logger
 from cookiecutter.main import cookiecutter
 from cookiecutter.exceptions import (
@@ -102,6 +103,14 @@ def main(
     # called 'help', use a qualified path to the directory.
     if template == u'help':
         click.echo(click.get_current_context().get_help())
+        sys.exit(0)
+    
+    if template == u'ls':        
+        config_dict = get_user_config(config_file=config_file, default_config=default_config)
+        clone_to_dir=config_dict['cookiecutters_dir']
+        import glob
+        directories = "\n".join(glob.glob1(clone_to_dir, "*"))
+        click.echo('Existing templates:\n' + directories)
         sys.exit(0)
 
     configure_logger(
